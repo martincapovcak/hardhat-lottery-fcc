@@ -51,7 +51,7 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatible {
 
     // Functions
     constructor(
-        address _vrfCoordinatorV2,
+        address _vrfCoordinatorV2, // contract
         uint256 _entranceFee,
         bytes32 _gasLane,
         uint64 _subscriptionId,
