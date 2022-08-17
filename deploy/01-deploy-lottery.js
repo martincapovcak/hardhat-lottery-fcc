@@ -45,6 +45,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
     callbackGasLimit = networkConfig[chainId].callbackGasLimit
     interval = networkConfig[chainId].interval
 
+    log("----------------------------------------------------")
     const arguments = [
         vrfCoordinatorV2Address,
         entranceFee,
@@ -66,6 +67,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
     if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
         await verify(lottery.address, arguments)
     }
+    log("----------------------------------------------------")
 }
 
 module.exports.tags = ["all", "lottery"]

@@ -11,7 +11,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
     const args = [BASE_FEE, GAS_PRICE_LINK]
 
     if (chainId == 31337) {
-        log("Local network detected! Deploying mocs..")
+        log("-> Local network detected! Deploying mocs..")
         // deploy a mock vrfcooordinator...
         await deploy("VRFCoordinatorV2Mock", {
             contract: "VRFCoordinatorV2Mock",
@@ -21,8 +21,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
         })
     }
 
-    log("Mocks Deployed!")
-    log("--------------------")
+    log("-> Mocks Deployed!")
 }
 
 module.exports.tags = ["all", "mocks"]
