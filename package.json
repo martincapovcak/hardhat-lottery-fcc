@@ -1,18 +1,14 @@
 {
   "name": "hardhat-lottery",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "npx prettier --write ."
   },
-  "keywords": [],
-  "author": "",
+  "author": "Martin Capovcak",
   "license": "ISC",
   "devDependencies": {
     "@chainlink/contracts": "^0.4.2",
-    "@nomicfoundation/hardhat-chai-matchers": "^1.0.3",
     "@nomicfoundation/hardhat-toolbox": "^1.0.2",
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.13",
     "@nomiclabs/hardhat-etherscan": "^3.1.0",
@@ -20,9 +16,7 @@
     "ethers": "^5.6.9",
     "hardhat": "^2.10.2",
     "hardhat-deploy": "^0.11.12",
-    "hardhat-gas-reporter": "^1.0.8",
     "prettier": "^2.7.1",
-    "prettier-plugin-solidity": "^1.0.0-beta.24",
-    "solidity-coverage": "^0.7.21"
+    "prettier-plugin-solidity": "^1.0.0-beta.24"
   }
 }
