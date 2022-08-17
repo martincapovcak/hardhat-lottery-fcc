@@ -62,12 +62,13 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
         log: true,
         waitConfirmations: network.config.blockConfirmations || 1,
     })
+    log("----------------------------------------------------")
+    log("-> Lottery Deployed!")
 
     // Verification
     if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
         await verify(lottery.address, arguments)
     }
-    log("----------------------------------------------------")
 }
 
 module.exports.tags = ["all", "lottery"]
