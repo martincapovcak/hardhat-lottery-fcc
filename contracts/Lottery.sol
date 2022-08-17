@@ -11,17 +11,21 @@ import "@chainlink/contracts/src/v0.8/KeeperCompatible.sol";
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-// Errors
-error Lottery__InsufficientEntranceFund();
-error Lottery__TransferFailed();
-error Lottery__NotOpen();
-error Lottery__UpkeepNotNeeded(uint256 _currentBalance, uint256 _numPlayers, uint256 _lotteryState);
-
 /// @title A sample Lottery Contract
 /// @author Martin Capovcak
 /// @notice This contract is for creating an untamperable decentralized smart contract
 /// @dev This implements Chainlink VRF v2 and Chainlink Keepers
 contract Lottery is VRFConsumerBaseV2, KeeperCompatible {
+    // Errors
+    error Lottery__InsufficientEntranceFund();
+    error Lottery__TransferFailed();
+    error Lottery__NotOpen();
+    error Lottery__UpkeepNotNeeded(
+        uint256 _currentBalance,
+        uint256 _numPlayers,
+        uint256 _lotteryState
+    );
+
     // Type
     enum LotteryState {
         OPEN,
@@ -69,7 +73,7 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatible {
     }
 
     function enterLottery() public payable {
-        if (msg.value <= i_entranceFee) revert Lottery__InsufficientEntranceFund();
+        if (msg.value < i_entranceFee) revert Lottery__InsufficientEntranceFund();
         if (s_lotteryState != LotteryState.OPEN) revert Lottery__NotOpen();
 
         s_players.push(payable(msg.sender));
@@ -182,5 +186,9 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatible {
 
     function getRequestConfirmations() public pure returns (uint256) {
         return REQUEST_CONFIRMATIONS;
+    }
+
+    function getInterval() public view returns (uint256) {
+        return i_interval;
     }
 }

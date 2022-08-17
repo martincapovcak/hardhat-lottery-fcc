@@ -1,12 +1,12 @@
 // dependencies
-const { network } = require("hardhat")
+const { getNamedAccounts, deployments, network, ethers } = require("hardhat")
 require("dotenv").config()
 
 // Imports
 const { developmentChains, networkConfig } = require("../helper-hardhat-config")
 const { verify } = require("../utils/verify.js")
 
-module.exports = async function ({ getNamedAccounts, deployments }) {
+module.exports = async (hre) => {
     const { deploy, log } = deployments
     const { deployer } = await getNamedAccounts()
     const chainId = network.config.chainId
@@ -63,7 +63,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
         waitConfirmations: network.config.blockConfirmations || 1,
     })
     log("----------------------------------------------------")
-    log("-> Lottery Deployed!")
+    log("-> Lottery Deployed! \n")
 
     // Verification
     if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {

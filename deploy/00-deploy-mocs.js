@@ -1,14 +1,14 @@
 // Dependencies
-const { network } = require("hardhat")
+const { getNamedAccounts, deployments, network } = require("hardhat")
 
-const BASE_FEE = ethers.utils.parseEther("0.25") //premium: cost 0.25 LINK (Oracle gas fee)
+const BASE_FEE = "250000000000000000" //premium: cost 0.25 LINK (Oracle gas fee)
 const GAS_PRICE_LINK = 1e9 //for mock hardcoded value 1-000-000-000 // (LINK per gas) ..claculated value based on the gas price on the chain
 
-module.exports = async function ({ getNamedAccounts, deployments }) {
+module.exports = async (hre) => {
     const { deploy, log } = deployments
     const { deployer } = await getNamedAccounts()
     const chainId = network.config.chainId
-    const args = [BASE_FEE, GAS_PRICE_LINK]
+    const arguments = [BASE_FEE, GAS_PRICE_LINK]
 
     if (chainId == 31337) {
         log("\n-> Local network detected! Deploying mocs..")
@@ -18,7 +18,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
             contract: "VRFCoordinatorV2Mock",
             from: deployer,
             log: true,
-            args: args,
+            args: arguments,
         })
         log("----------------------------------------------------")
     }
