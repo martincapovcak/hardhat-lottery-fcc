@@ -4,6 +4,7 @@ const { expect, assert } = require("chai")
 
 // Imports
 const { developmentChains, networkConfig } = require("../../helper-hardhat-config.js")
+const { owl } = require("../../helpers/helper-log")
 
 // Logic
 !developmentChains.includes(network.name)
@@ -123,10 +124,83 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                   await network.provider.send("evm_mine", [])
                   const txResponse = await lottery.performUpkeep([])
                   const txReceipt = await txResponse.wait(1)
-                  const requestId = txReceipt.events[1].args.requestId
+                  // owl - custom log
+                  owl("receipt:", txReceipt.events[1].args)
+                  const requestId = txReceipt.events[1].args._requestId
                   const lotteryState = await lottery.getLotteryState()
                   assert(requestId.toNumber() > 0)
                   assert(lotteryState.toString() == "1")
+              })
+          })
+          describe("fulfill random words", () => {
+              beforeEach(async () => {
+                  await lottery.enterLottery({ value: lotteryEntranceFee })
+                  await network.provider.send("evm_increaseTime", [interval.toNumber() + 1])
+                  await network.provider.send("evm_mine", [])
+              })
+              it("can only be called after performUpkeep", async () => {
+                  await expect(
+                      vrfCoordinatorV2Mock.fulfillRandomWords(0, lottery.address)
+                  ).to.be.revertedWith("nonexistent request")
+              })
+
+              it("picks a winner, resets the lottery, and sends money", async () => {
+                  const accounts = await ethers.getSigners()
+
+                  const additionalEntrances = 3
+                  const startingAccountIndex = 1 // deployer = 0
+                  for (let i = startingAccountIndex; i <= additionalEntrances; i++) {
+                      const accountConnectedLottery = lottery.connect(accounts[1])
+                      await accountConnectedLottery.enterLottery({ value: lotteryEntranceFee })
+                  }
+                  const startingTimestamp = await lottery.getLatestTimestamp()
+
+                  // performUpkeep (mock being chailnlink keepers)
+                  // fullfill random words (mock being the Chainlink VRF)
+                  // we will have to wait for the fulfillRandomWords to be called
+
+                  await new Promise(async (resolve, reject) => {
+                      lottery.once("WinnerPicked", async () => {
+                          console.log("Found the event!")
+                          try {
+                              const recentWinner = await lottery.getRecentWinner()
+                              const lotteryState = await lottery.getLotteryState()
+                              const endingTimestamp = await lottery.getLatestTimestamp()
+                              const numPlayers = await lottery.getNumberOfPlayers()
+                              const winnerEndingBalance = await accounts[1].getBalance()
+                              expect(numPlayers.toString(), "0")
+                              expect(lotteryState.toString(), "0")
+                              expect(endingTimestamp > startingTimestamp)
+                              // console.log("Winner -> ", recentWinner)
+                              // console.log(accounts[0].address)
+                              // console.log(accounts[1].address)
+                              // console.log(accounts[2].address)
+                              // console.log(accounts[3].address)
+
+                              expect(
+                                  winnerEndingBalance.toString(),
+                                  winnerStartingBalance.add(
+                                      lotteryEntranceFee
+                                          .mul(additionalEntrances)
+                                          .add(lotteryEntranceFee)
+                                          .toString()
+                                  )
+                              )
+                          } catch (e) {
+                              reject(e)
+                          }
+                          resolve()
+                      })
+                      // Setting up the listener
+                      // below, we will fire the event, and the listener will pick it up, and resolve
+                      const tx = await lottery.performUpkeep([])
+                      const txReceipt = await tx.wait(1)
+                      const winnerStartingBalance = await accounts[1].getBalance()
+                      await vrfCoordinatorV2Mock.fulfillRandomWords(
+                          txReceipt.events[1].args._requestId,
+                          lottery.address
+                      )
+                  })
               })
           })
       })
