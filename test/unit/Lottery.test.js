@@ -53,9 +53,7 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                       "LotteryEnter"
                   )
               })
-              /**
-               * ISSUE - reverted with custom error 'InvalidConsumer()' from VRFCoordinatorV2Mock
-               * 
+
               it("doesnt allow entrance when lottery is calculating", async () => {
                   await lottery.enterLottery({ value: lotteryEntranceFee })
                   // Modify local blockchain time
@@ -67,7 +65,6 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                       lottery.enterLottery({ value: lotteryEntranceFee })
                   ).to.be.revertedWithCustomError(lottery, "Lottery__NotOpen")
               })
-              */
           })
           describe("checkUpkeep", () => {
               it("returns false if people haven't sent any ETH", async () => {
@@ -76,10 +73,8 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                   const { upkeepNeeded } = await lottery.callStatic.checkUpkeep([])
                   assert(!upkeepNeeded)
               })
-              /**
-               * ISSUE - reverted with custom error 'InvalidConsumer()' from VRFCoordinatorV2Mock
-               * 
-               it("returns false if lottery isn't open", async () => {
+
+              it("returns false if lottery isn't open", async () => {
                   await lottery.enterLottery({ value: lotteryEntranceFee })
                   await network.provider.send("evm_increaseTime", [interval.toNumber() + 1])
                   await network.provider.send("evm_mine", [])
@@ -89,7 +84,7 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                   assert.equal(lotteryState.toString(), "1")
                   assert.equal(upkeepNeeded, false)
               })
-               */
+
               it("returns false if enough time hasn't passed", async () => {
                   await lottery.enterLottery({ value: lotteryEntranceFee })
                   await network.provider.send("evm_increaseTime", [interval.toNumber() - 1])
@@ -107,17 +102,14 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
           })
 
           describe("performUpkeep", () => {
-              /**
-             * ISSUE - reverted with custom error 'InvalidConsumer()' from VRFCoordinatorV2Mock
-             * 
-            it("it can only run if checkupkeep is true", async () => {
+              it("it can only run if checkupkeep is true", async () => {
                   await lottery.enterLottery({ value: lotteryEntranceFee })
                   await network.provider.send("evm_increaseTime", [interval.toNumber() + 1])
                   await network.provider.send("evm_mine", [])
                   const tx = await lottery.performUpkeep([])
                   assert(tx)
               })
-             */
+
               it("reverts when checkupkeep is false", async () => {
                   await expect(lottery.performUpkeep([])).to.be.revertedWithCustomError(
                       lottery,
@@ -125,10 +117,7 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                   )
               })
 
-              /**
-             * ISSUE - reverted with custom error 'InvalidConsumer()' from VRFCoordinatorV2Mock
-             * 
-             it("updates the lottery state, emits an event, and calls the vrf coordinator", async () => {
+              it("updates the lottery state, emits an event, and calls the vrf coordinator", async () => {
                   await lottery.enterLottery({ value: lotteryEntranceFee })
                   await network.provider.send("evm_increaseTime", [interval.toNumber() + 1])
                   await network.provider.send("evm_mine", [])
@@ -137,8 +126,7 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                   const requestId = txReceipt.events[1].args.requestId
                   const lotteryState = await lottery.getLotteryState()
                   assert(requestId.toNumber() > 0)
-                  assert(lotteryState.toNumner() == 1)
+                  assert(lotteryState.toString() == "1")
               })
-             */
           })
       })
