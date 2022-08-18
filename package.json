@@ -1,11 +1,11 @@
 {
   "name": "hardhat-lottery",
+  "author": "Martin Capovcak",
   "version": "1.0.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "npx prettier --write ."
   },
-  "author": "Martin Capovcak",
   "license": "ISC",
   "devDependencies": {
     "@chainlink/contracts": "^0.4.2",

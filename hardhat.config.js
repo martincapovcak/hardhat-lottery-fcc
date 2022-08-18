@@ -10,15 +10,17 @@ const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "key"
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || "key"
 
 module.exports = {
+    detaultNetwork: "hardhat",
     networks: {
-        hardhat: {
+        localhost: {
             chainId: 31337,
+            url: " http://127.0.0.1:8545/",
             blockConfirmations: 1,
         },
         rinkeby: {
             chainId: 4,
-            blockConfirmations: 6,
             url: RINKEBY_RPC_URL,
+            blockConfirmations: 6,
             accounts: [PRIVATE_KEY],
         },
     },

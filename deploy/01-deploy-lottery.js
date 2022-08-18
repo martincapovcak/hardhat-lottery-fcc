@@ -1,5 +1,5 @@
 // dependencies
-const { getNamedAccounts, deployments, network, ethers } = require("hardhat")
+const { network, ethers } = require("hardhat")
 require("dotenv").config()
 
 // Imports
@@ -7,12 +7,13 @@ const { developmentChains, networkConfig } = require("../helper-hardhat-config")
 const { verify } = require("../utils/verify.js")
 
 module.exports = async (hre) => {
+    const { getNamedAccounts, deployments } = hre
     const { deploy, log } = deployments
     const { deployer } = await getNamedAccounts()
     const chainId = network.config.chainId
 
     // Fund for MOCK
-    const VRF_SUB_FUND_AMOUNT = ethers.utils.parseEther("2")
+    const VRF_SUB_FUND_AMOUNT = "1000000000000000000000"
 
     // constructor variables
     let vrfCoordinatorV2Address // contract
@@ -44,6 +45,10 @@ module.exports = async (hre) => {
     gasLane = networkConfig[chainId].gasLane
     callbackGasLimit = networkConfig[chainId].callbackGasLimit
     interval = networkConfig[chainId].interval
+
+    log("-> Network name: ", network.name)
+    log("-> Chain ID: ", chainId)
+    log("-> Entrance fee: ", entranceFee.toString())
 
     log("----------------------------------------------------")
     const arguments = [
