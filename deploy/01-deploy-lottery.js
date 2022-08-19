@@ -36,7 +36,7 @@ module.exports = async (hre) => {
         await vrfCoordinatorV2Mock.fundSubscription(subscriptionId, VRF_SUB_FUND_AMOUNT)
     } else {
         // we are on a online network
-        vrfCoordinatorV2Address = networkConfig[chainId].vrfCoordinatorV2()
+        vrfCoordinatorV2Address = networkConfig[chainId].vrfCoordinatorV2
         subscriptionId = networkConfig[chainId].subscriptionId
     }
 
