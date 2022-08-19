@@ -1,6 +1,7 @@
 require("@nomicfoundation/hardhat-toolbox")
 require("@nomicfoundation/hardhat-chai-matchers")
 require("@nomiclabs/hardhat-ethers")
+require("@nomiclabs/hardhat-etherscan")
 require("hardhat-deploy")
 require("dotenv").config()
 
