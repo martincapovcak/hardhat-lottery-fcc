@@ -10,6 +10,7 @@ const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "key"
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || "key"
 
 module.exports = {
+    solidity: "0.8.9",
     detaultNetwork: "hardhat",
     networks: {
         localhost: {
@@ -24,7 +25,12 @@ module.exports = {
             accounts: [PRIVATE_KEY],
         },
     },
-    solidity: "0.8.9",
+    etherscan: {
+        // yarn hardhat verify --network <NETWORK> <CONTRACT_ADDRESS> <CONSTRUCTOR_PARAMETERS>
+        apiKey: {
+            rinkeby: ETHERSCAN_API_KEY,
+        },
+    },
     namedAccounts: {
         deployer: {
             default: 0,
@@ -34,6 +40,6 @@ module.exports = {
         },
     },
     mocha: {
-        timeout: 300000, // 300 seconds - max
+        timeout: 500000, // 500 seconds max for running tests
     },
 }
